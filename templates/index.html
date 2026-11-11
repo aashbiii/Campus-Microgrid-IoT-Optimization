@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RCSS Campus Micro-Grid & Energy Optimization System</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+    <!-- TOP HEADER -->
+    <header class="top-nav">
+        <div class="nav-brand">
+            <div class="brand-pill">RCSS</div>
+            <div class="brand-pill team-pixel">TEAM PIXEL</div>
+            <div class="brand-info">
+                <h1>Rajagiri College of Social Sciences (RCSS)</h1>
+                <p>Campus Micro-Grid &amp; Energy Optimization System &bull; Kalamassery</p>
+            </div>
+        </div>
+        <div class="nav-status">
+            <div class="broker-badge">
+                <span class="pulse-dot"></span>
+                <span>HiveMQ Broker: <strong id="brokerHost">broker.hivemq.com:1883</strong></span>
+            </div>
+            <div class="time-clock" id="liveClock">--:--:--</div>
+        </div>
+    </header>
+
+    <!-- MAIN DASHBOARD CONTAINER -->
+    <main class="dashboard-wrapper">
+
+        <!-- TITLE HERO -->
+        <section class="hero-section">
+            <div class="hero-left">
+                <h2>⚡ Campus Micro-Grid &amp; Demand Optimization Platform</h2>
+                <p>Real-time edge telemetry, recursive GBR demand forecasting, and closed-loop autonomous waste reduction.</p>
+            </div>
+            <div class="hero-right">
+                <span class="mode-pill">DEMO MODE (30s PERSISTENCE)</span>
+                <span class="mode-pill mode-cutoff">IDLE CUTOFF: 150 W</span>
+            </div>
+        </section>
+
+        <!-- KPI CARDS GRID -->
+        <section class="kpi-grid">
+            <div class="kpi-card" id="kpiTotalLoad">
+                <div class="kpi-label">Campus Total Load</div>
+                <div class="kpi-value"><span id="metricTotalPower">0.0</span> <small>W</small></div>
+                <div class="kpi-delta" id="metricTotalKw">0.00 kW Active</div>
+            </div>
+
+            <div class="kpi-card" id="kpiCircuits">
+                <div class="kpi-label">Circuit Breaker States</div>
+                <div class="kpi-value"><span id="metricActiveLabs">0</span> / 4 <small>Online</small></div>
+                <div class="kpi-delta" id="metricStandbyLabs">0 Standby/Off</div>
+            </div>
+
+            <div class="kpi-card highlight-green" id="kpiSavings">
+                <div class="kpi-label">Energy Conserved</div>
+                <div class="kpi-value"><span id="metricKwhSaved">0.0000</span> <small>kWh</small></div>
+                <div class="kpi-delta">🌱 <span id="metricCo2Saved">0.000</span> kg CO₂ Avoided</div>
+            </div>
+
+            <div class="kpi-card highlight-cyan">
+                <div class="kpi-label">HiveMQ Ingestion Status</div>
+                <div class="kpi-value" style="color: var(--cyan-primary);">CONNECTED</div>
+                <div class="kpi-delta">Namespace: <code>campusmg_x7k2</code></div>
+            </div>
+        </section>
+
+        <!-- MONITORED LABORATORIES (4 CARDS) -->
+        <section class="section-title">
+            <h3>🎛️ Monitored Facilities &amp; Autonomous Closed-Loop Controls</h3>
+            <span class="subtext">Turn down Wokwi potentiometer dial &lt; 150 W to see live countdown timer and automatic cutoff</span>
+        </section>
+
+        <section class="labs-grid" id="labsContainer">
+            <!-- Dynamically populated by app.js -->
+        </section>
+
+        <!-- CHARTS SECTION -->
+        <section class="charts-grid">
+            <!-- Telemetry Time Series -->
+            <div class="chart-card">
+                <div class="chart-header">
+                    <h4>📈 Real-Time Power Telemetry Stream</h4>
+                    <span class="chart-badge">Last 200 Ingested Samples</span>
+                </div>
+                <div class="chart-body">
+                    <canvas id="telemetryChart"></canvas>
+                </div>
+            </div>
+
+            <!-- 6-Hour ML Forecast -->
+            <div class="chart-card">
+                <div class="chart-header">
+                    <h4>🔮 6-Hour Gradient Boosting Demand Forecast</h4>
+                    <span class="chart-badge" id="peakForecastAlert">Peak: Calculating...</span>
+                </div>
+                <div class="chart-body">
+                    <canvas id="forecastChart"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <!-- AUDIT TRAIL TABLE -->
+        <section class="table-card">
+            <div class="table-header">
+                <h4>📋 Autonomous Optimization Audit Trail (Closed-Loop Records)</h4>
+                <button class="btn-refresh" onclick="fetchAuditLogs()">🔄 Refresh Audit Trail</button>
+            </div>
+            <div class="table-body">
+                <table class="custom-table">
+                    <thead>
+                        <tr>
+                            <th>Log ID</th>
+                            <th>Laboratory Facility</th>
+                            <th>Trigger Reason</th>
+                            <th>Flagged At</th>
+                            <th>Restored At</th>
+                            <th>Avg Load (W)</th>
+                            <th>Energy Conserved</th>
+                            <th>Loop Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="auditTableBody">
+                        <tr>
+                            <td colspan="8" style="text-align: center; color: var(--text-muted); padding: 20px;">
+                                Loading audit records...
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- FOOTER -->
+        <footer class="dash-footer">
+            <div>
+                <strong>Rajagiri College of Social Sciences (RCSS)</strong> &bull; Department of Computer Science, Kalamassery
+            </div>
+            <div>
+                Developed by <strong>Team PIXEL</strong> &bull; Major Capstone Project Defense
+            </div>
+        </footer>
+
+    </main>
+
+    <!-- TOAST CONTAINER -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <script src="/static/app.js"></script>
+</body>
+</html>

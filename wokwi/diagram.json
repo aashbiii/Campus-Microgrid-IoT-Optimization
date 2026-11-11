@@ -1,0 +1,26 @@
+{
+  "version": 1,
+  "author": "Campus Microgrid Team",
+  "editor": "wokwi",
+  "parts": [
+    { "type": "wokwi-esp32-devkit-v1", "id": "esp", "top": 0, "left": 0, "attrs": {} },
+    { "type": "wokwi-potentiometer", "id": "pot", "top": -90, "left": 160, "attrs": {} },
+    { "type": "wokwi-relay-module", "id": "relay", "top": 120, "left": 160, "attrs": {} },
+    { "type": "wokwi-led", "id": "led", "top": 60, "left": -90, "attrs": { "color": "green" } },
+    { "type": "wokwi-resistor", "id": "r1", "top": 110, "left": -90, "attrs": { "resistance": "220" } }
+  ],
+  "connections": [
+    [ "esp:TX0", "$serial:RX", "", [] ],
+    [ "esp:RX0", "$serial:TX", "", [] ],
+    [ "esp:3V3", "pot:VCC", "red", [ "v0" ] ],
+    [ "esp:GND.1", "pot:GND", "black", [ "v0" ] ],
+    [ "esp:D34", "pot:SIG", "green", [ "v0" ] ],
+    [ "esp:D26", "relay:IN", "blue", [ "v0" ] ],
+    [ "esp:5V", "relay:VCC", "red", [ "v0" ] ],
+    [ "esp:GND.2", "relay:GND", "black", [ "v0" ] ],
+    [ "esp:D2", "r1:1", "orange", [ "v0" ] ],
+    [ "r1:2", "led:A", "orange", [ "v0" ] ],
+    [ "esp:GND.3", "led:C", "black", [ "v0" ] ]
+  ],
+  "dependencies": {}
+}

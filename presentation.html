@@ -1,0 +1,1471 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RCSS Campus Micro-Grid & Energy Optimization System | Faculty Presentation</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800;900&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #0a0f1d;
+            --bg-card: rgba(18, 26, 47, 0.75);
+            --bg-card-hover: rgba(28, 39, 68, 0.85);
+            --border-card: rgba(255, 255, 255, 0.08);
+            --border-highlight: rgba(0, 212, 255, 0.4);
+            
+            --cyan-primary: #00d4ff;
+            --cyan-glow: rgba(0, 212, 255, 0.25);
+            --indigo-accent: #6366f1;
+            --emerald-green: #10b981;
+            --amber-warn: #f59e0b;
+            --rose-danger: #f43f5e;
+            
+            --text-main: #f8fafc;
+            --text-sub: #94a3b8;
+            --text-muted: #64748b;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            font-family: 'Inter', -apple-system, sans-serif;
+            overflow: hidden;
+            height: 100vh;
+            width: 100vw;
+            display: flex;
+            flex-direction: column;
+            user-select: none;
+            background-image: 
+                radial-gradient(circle at 15% 20%, rgba(0, 212, 255, 0.05) 0%, transparent 40%),
+                radial-gradient(circle at 85% 80%, rgba(99, 102, 241, 0.06) 0%, transparent 45%);
+        }
+
+        /* Top Bar */
+        .top-navbar {
+            height: 64px;
+            padding: 0 36px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(10, 15, 29, 0.85);
+            backdrop-filter: blur(16px);
+            border-bottom: 1px solid var(--border-card);
+            z-index: 50;
+        }
+
+        .brand-container {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .brand-badge {
+            background: linear-gradient(135deg, #00d4ff, #6366f1);
+            color: #000;
+            font-weight: 900;
+            font-size: 0.85rem;
+            padding: 4px 8px;
+            border-radius: 6px;
+            letter-spacing: 0.5px;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        .brand-text {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: var(--text-main);
+            letter-spacing: 0.2px;
+        }
+
+        .brand-subtext {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-left: 6px;
+            border-left: 1px solid var(--border-card);
+            padding-left: 8px;
+        }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn-action {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid var(--border-card);
+            color: var(--text-sub);
+            padding: 6px 14px;
+            border-radius: 8px;
+            font-size: 0.82rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn-action:hover, .btn-action.active {
+            background: rgba(0, 212, 255, 0.12);
+            color: var(--cyan-primary);
+            border-color: var(--cyan-primary);
+        }
+
+        /* Slide Viewport */
+        .slide-viewport {
+            flex: 1;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .slide-frame {
+            position: absolute;
+            inset: 0;
+            padding: 36px 60px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transform: translateX(40px) scale(0.98);
+            transition: all 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .slide-frame.active {
+            opacity: 1;
+            pointer-events: auto;
+            transform: translateX(0) scale(1);
+        }
+
+        /* Headings & Category Tag */
+        .category-tag {
+            color: var(--cyan-primary);
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.8px;
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .category-tag::before {
+            content: "";
+            width: 8px;
+            height: 8px;
+            background: var(--cyan-primary);
+            border-radius: 50%;
+            display: inline-block;
+            box-shadow: 0 0 10px var(--cyan-primary);
+        }
+
+        .slide-header-title {
+            font-family: 'Outfit', sans-serif;
+            font-size: 2.35rem;
+            font-weight: 800;
+            letter-spacing: -0.6px;
+            line-height: 1.15;
+            margin-bottom: 24px;
+            background: linear-gradient(135deg, #ffffff 40%, #00d4ff 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Content Grids */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 20px;
+        }
+
+        .grid-4 {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+        }
+
+        /* Cards */
+        .glass-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-card);
+            border-radius: 16px;
+            padding: 24px 26px;
+            backdrop-filter: blur(14px);
+            box-shadow: 0 12px 32px rgba(0, 0, 0, 0.35);
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .glass-card:hover {
+            border-color: var(--border-highlight);
+            transform: translateY(-3px);
+            box-shadow: 0 16px 40px rgba(0, 212, 255, 0.12);
+        }
+
+        .glass-card.highlight {
+            border-color: rgba(0, 212, 255, 0.5);
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.08), rgba(18, 26, 47, 0.85));
+        }
+
+        .glass-card.highlight::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--cyan-primary), var(--indigo-accent));
+        }
+
+        .card-heading {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.22rem;
+            font-weight: 700;
+            color: var(--cyan-primary);
+            margin-bottom: 14px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card-list {
+            list-style: none;
+        }
+
+        .card-list li {
+            font-size: 0.94rem;
+            line-height: 1.58;
+            margin-bottom: 10px;
+            color: #e2e8f0;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+        }
+
+        .card-list li::before {
+            content: "▸";
+            color: var(--cyan-primary);
+            font-size: 1.1rem;
+            line-height: 1.2;
+            flex-shrink: 0;
+        }
+
+        .strong-cyan { color: var(--cyan-primary); font-weight: 600; }
+        .strong-green { color: var(--emerald-green); font-weight: 600; }
+        .strong-warn { color: var(--amber-warn); font-weight: 600; }
+        .strong-danger { color: var(--rose-danger); font-weight: 600; }
+
+        /* Tables */
+        .custom-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.92rem;
+        }
+
+        .custom-table th {
+            background: rgba(0, 212, 255, 0.12);
+            color: var(--cyan-primary);
+            padding: 10px 14px;
+            text-align: left;
+            font-family: 'Outfit', sans-serif;
+            font-weight: 700;
+            border-bottom: 1px solid var(--border-card);
+        }
+
+        .custom-table td {
+            padding: 10px 14px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            color: #e2e8f0;
+        }
+
+        .custom-table tr:hover td {
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        /* Flow Badges */
+        .flow-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+            margin: 20px 0;
+        }
+
+        .flow-step {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border-card);
+            padding: 14px 10px;
+            border-radius: 12px;
+            text-align: center;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .flow-step:hover {
+            border-color: var(--cyan-primary);
+            background: rgba(0, 212, 255, 0.07);
+            transform: translateY(-2px);
+        }
+
+        .flow-num {
+            font-size: 0.72rem;
+            font-weight: 800;
+            color: var(--cyan-primary);
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .flow-title {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.05rem;
+            font-weight: 700;
+            margin-top: 2px;
+        }
+
+        .flow-sub {
+            font-size: 0.76rem;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        .flow-arrow {
+            color: var(--cyan-primary);
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+
+        /* Interactive Simulator on Slide */
+        .simulator-box {
+            background: rgba(10, 15, 29, 0.75);
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            border-radius: 14px;
+            padding: 18px 24px;
+            margin-top: 10px;
+        }
+
+        .sim-slider-row {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 14px;
+        }
+
+        .sim-slider {
+            flex: 1;
+            height: 8px;
+            border-radius: 4px;
+            accent-color: var(--cyan-primary);
+            cursor: pointer;
+        }
+
+        .sim-status-row {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            text-align: center;
+        }
+
+        .sim-badge {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-card);
+            border-radius: 8px;
+            padding: 8px 10px;
+        }
+
+        .sim-badge-label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+        }
+
+        .sim-badge-value {
+            font-family: 'Fira Code', monospace;
+            font-size: 1rem;
+            font-weight: 700;
+            margin-top: 2px;
+        }
+
+        /* Bottom Control Bar */
+        .bottom-bar {
+            height: 60px;
+            padding: 0 36px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(10, 15, 29, 0.95);
+            border-top: 1px solid var(--border-card);
+            z-index: 50;
+        }
+
+        .progress-track {
+            flex: 1;
+            max-width: 400px;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 3px;
+            overflow: hidden;
+            margin: 0 20px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            width: 6%;
+            background: linear-gradient(90deg, var(--indigo-accent), var(--cyan-primary));
+            transition: width 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .slide-counter-badge {
+            font-family: 'Fira Code', monospace;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-sub);
+        }
+
+        .btn-nav-arrow {
+            background: var(--bg-card);
+            border: 1px solid var(--border-card);
+            color: var(--text-main);
+            padding: 8px 20px;
+            border-radius: 8px;
+            font-size: 0.88rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-family: 'Outfit', sans-serif;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-nav-arrow:hover {
+            background: var(--cyan-primary);
+            color: #000;
+            border-color: var(--cyan-primary);
+            box-shadow: 0 0 15px var(--cyan-glow);
+        }
+
+        /* Speaker Notes Drawer */
+        .speaker-notes-panel {
+            position: fixed;
+            bottom: 60px;
+            right: 20px;
+            width: 480px;
+            max-height: 240px;
+            background: rgba(15, 23, 42, 0.96);
+            border: 1px solid var(--cyan-primary);
+            border-radius: 12px;
+            padding: 16px 20px;
+            box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(20px);
+            z-index: 90;
+            display: none;
+            overflow-y: auto;
+        }
+
+        .speaker-notes-panel.open {
+            display: block;
+            animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .notes-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 6px;
+        }
+
+        .notes-title {
+            font-size: 0.82rem;
+            font-weight: 700;
+            color: var(--cyan-primary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .notes-body {
+            font-size: 0.88rem;
+            line-height: 1.5;
+            color: #cbd5e1;
+        }
+
+        /* Jump Drawer Overlay */
+        .drawer-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(10, 15, 29, 0.92);
+            backdrop-filter: blur(16px);
+            z-index: 100;
+            padding: 60px;
+            display: none;
+            overflow-y: auto;
+        }
+
+        .drawer-overlay.open {
+            display: block;
+            animation: fadeIn 0.25s ease;
+        }
+
+        .drawer-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 18px;
+            margin-top: 24px;
+        }
+
+        .drawer-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-card);
+            border-radius: 12px;
+            padding: 16px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .drawer-card:hover {
+            border-color: var(--cyan-primary);
+            transform: translateY(-2px);
+            background: rgba(0, 212, 255, 0.08);
+        }
+
+        .drawer-card-num {
+            font-size: 0.75rem;
+            color: var(--cyan-primary);
+            font-weight: 700;
+        }
+
+        .drawer-card-title {
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.98rem;
+            font-weight: 700;
+            margin-top: 4px;
+        }
+
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+    </style>
+</head>
+<body>
+
+    <!-- TOP NAVBAR -->
+    <div class="top-navbar">
+        <div class="brand-container">
+            <span class="brand-badge" style="background: linear-gradient(135deg, #6366f1, #00d4ff);">TEAM PIXEL</span>
+            <div>
+                <span class="brand-text">Team PIXEL</span>
+            </div>
+        </div>
+        <div class="nav-actions">
+            <button class="btn-action" onclick="toggleNotes()" id="notesBtn">
+                🎙️ Speaker Notes (N)
+            </button>
+            <button class="btn-action" onclick="toggleDrawer()">
+                📑 All Slides (O)
+            </button>
+            <button class="btn-action" onclick="toggleFullscreen()">
+                ⛶ Fullscreen (F)
+            </button>
+        </div>
+    </div>
+
+    <!-- SLIDE VIEWPORT -->
+    <div class="slide-viewport">
+
+        <!-- SLIDE 1: Title & Cover -->
+        <div class="slide-frame active" data-notes="Welcome the faculty panel. Introduce Team PIXEL from Rajagiri College of Social Sciences (RCSS) Kalamassery, and outline our capstone defense on real-time microgrid energy optimization across campus laboratories.">
+            <div style="max-width: 980px; margin: auto; text-align: center;">
+                <h1 style="font-family: 'Outfit', sans-serif; font-size: 3.5rem; font-weight: 900; line-height: 1.12; margin-bottom: 18px; background: linear-gradient(135deg, #ffffff 30%, #00d4ff 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+                    Campus Micro-Grid & Energy Optimization System
+                </h1>
+                <p style="font-size: 1.25rem; color: var(--text-sub); margin-bottom: 24px; line-height: 1.5;">
+                    Hardware-in-the-Loop IoT & Machine Learning Closed-Loop Demand Management Platform for RCSS Computer Laboratories
+                </p>
+                <div style="display: inline-flex; align-items: center; gap: 20px; background: rgba(0, 212, 255, 0.08); border: 1px solid rgba(0, 212, 255, 0.3); border-radius: 14px; padding: 12px 28px; box-shadow: 0 10px 30px rgba(0,0,0,0.4);">
+                    <div style="text-align: left;">
+                        <div style="font-size: 1rem; font-weight: 700;">Rajagiri College of Social Sciences (RCSS)</div>
+                        <div style="font-size: 0.78rem; color: var(--text-muted);">Department of Computer Science, Kalamassery</div>
+                    </div>
+                    <div style="height: 34px; width: 1px; background: rgba(255,255,255,0.15);"></div>
+                    <div style="text-align: left;">
+                        <div style="font-size: 1rem; font-weight: 700; color: #fff;">Team Name: <span style="color: var(--cyan-primary);">PIXEL</span></div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- SLIDE 2: Team PIXEL & Project Governance -->
+        <div class="slide-frame" data-notes="Introduce Team PIXEL. Highlight our leadership structure: Devna J as Team Lead, Diya Mary George coordinating documentation, Jees Thomas Cleetus coordinating presentation and defense, along with our engineering members specializing in embedded firmware, MQTT cloud ingestion, ML modeling, decision logic, M&V analytics, and full-stack integration.">
+            <div class="category-tag">Project Team &bull; Governance</div>
+            <h2 class="slide-header-title">Team PIXEL &mdash; Engineering Roster & Roles</h2>
+
+            <!-- Leadership Row (3 prominent cards) -->
+            <div class="grid-3" style="margin-bottom: 14px;">
+                <div class="glass-card highlight" style="padding: 16px 20px;">
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 6px;">
+                        <span style="background: linear-gradient(135deg, #00d4ff, #6366f1); color: #000; font-size: 0.72rem; font-weight: 800; padding: 2px 8px; border-radius: 4px; text-transform: uppercase;">Team Lead</span>
+                        <span style="font-size: 1.1rem;">👑</span>
+                    </div>
+                    <div style="font-family: 'Outfit', sans-serif; font-size: 1.3rem; font-weight: 800; color: #fff;">Devna J</div>
+                    <div style="font-size: 0.8rem; color: var(--cyan-primary); font-weight: 600; margin-top: 2px;">Team Lead</div>
+                </div>
+
+                <div class="glass-card" style="padding: 16px 20px; border-color: rgba(99, 102, 241, 0.4);">
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 6px;">
+                        <span style="background: rgba(99, 102, 241, 0.2); color: #818cf8; border: 1px solid rgba(99, 102, 241, 0.5); font-size: 0.72rem; font-weight: 800; padding: 2px 8px; border-radius: 4px; text-transform: uppercase;">Coordinator</span>
+                        <span style="font-size: 1.1rem;">📑</span>
+                    </div>
+                    <div style="font-family: 'Outfit', sans-serif; font-size: 1.3rem; font-weight: 800; color: #fff;">Diya Mary George</div>
+                    <div style="font-size: 0.8rem; color: #818cf8; font-weight: 600; margin-top: 2px;">Documentation Coordinator</div>
+                </div>
+
+                <div class="glass-card" style="padding: 16px 20px; border-color: rgba(16, 185, 129, 0.4);">
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 6px;">
+                        <span style="background: rgba(16, 185, 129, 0.2); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.5); font-size: 0.72rem; font-weight: 800; padding: 2px 8px; border-radius: 4px; text-transform: uppercase;">Coordinator</span>
+                        <span style="font-size: 1.1rem;">🎙️</span>
+                    </div>
+                    <div style="font-family: 'Outfit', sans-serif; font-size: 1.3rem; font-weight: 800; color: #fff;">Jees Thomas Cleetus</div>
+                    <div style="font-size: 0.8rem; color: #34d399; font-weight: 600; margin-top: 2px;">Presentation Coordinator</div>
+                </div>
+            </div>
+
+            <!-- Engineering Members Grid (7 members) -->
+            <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px;">
+                <div class="glass-card" style="padding: 12px 14px;">
+                    <div style="font-family: 'Outfit', sans-serif; font-size: 1rem; font-weight: 700; color: #fff;">Ashbi Saju</div>
+                </div>
+
+                <div class="glass-card" style="padding: 12px 14px;">
+                    <div style="font-family: 'Outfit', sans-serif; font-size: 1rem; font-weight: 700; color: #fff;">Rena Elza Viju</div>
+                </div>
+
+                <div class="glass-card" style="padding: 12px 14px;">
+                    <div style="font-family: 'Outfit', sans-serif; font-size: 1rem; font-weight: 700; color: #fff;">Kishore M</div>
+                </div>
+
+                <div class="glass-card" style="padding: 12px 14px;">
+                    <div style="font-family: 'Outfit', sans-serif; font-size: 1rem; font-weight: 700; color: #fff;">Merlin Xavier</div>
+                </div>
+
+                <div class="glass-card" style="padding: 12px 14px;">
+                    <div style="font-family: 'Outfit', sans-serif; font-size: 1rem; font-weight: 700; color: #fff;">Jasin Joji</div>
+                </div>
+
+                <div class="glass-card" style="padding: 12px 14px;">
+                    <div style="font-family: 'Outfit', sans-serif; font-size: 1rem; font-weight: 700; color: #fff;">Daya Mathew</div>
+                </div>
+
+                <div class="glass-card" style="padding: 12px 14px; grid-column: span 2;">
+                    <div style="font-family: 'Outfit', sans-serif; font-size: 1rem; font-weight: 700; color: #fff;">Mahadevan Nair MP</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 3: Problem Statement -->
+        <div class="slide-frame" data-notes="Explain the problem clearly. Emphasize that in colleges like RCSS, when a lab session ends early or is cancelled, 30+ PCs continue drawing power because students leave without turning off individual plugs. Over 30% of energy is lost in idle states.">
+            <div class="category-tag">Problem Explanation</div>
+            <h2 class="slide-header-title">Energy Waste In Campus Computer Labs</h2>
+            <div class="grid-2">
+                <div class="glass-card highlight">
+                    <div class="card-heading">⚡ The Problem at RCSS Kalamassery</div>
+                    <ul class="card-list">
+                        <li><strong>High Continuous Power Draw:</strong> Computing hubs like CC Lab and Carmel Lab draw <span class="strong-cyan">2.5 kW to 3.5 kW</span> during scheduled class blocks.</li>
+                        <li><strong>Early Practical Session Completion:</strong> Coding practicals frequently conclude 30–45 minutes early; students depart leaving 35+ workstations fully powered.</li>
+                        <li><strong>Unannounced Cancellations & Lunch Dips:</strong> Unoccupied computing halls remain fully energized with zero occupancy, causing massive baseline leakage.</li>
+                        <li><strong>Substantial Institutional Cost:</strong> Preventable idle loads account for up to <span class="strong-warn">35% of total computer lab electricity waste</span> on campus.</li>
+                    </ul>
+                </div>
+                <div class="glass-card">
+                    <div class="card-heading">🛑 Why Conventional Approaches Fail</div>
+                    <ul class="card-list">
+                        <li><strong>Manual Human Inspection Fails:</strong> Facility technicians cannot physically walk across multi-story academic blocks to verify empty lab rooms in real time.</li>
+                        <li><strong>Zero Sub-Hourly Observability:</strong> Utility electricity bills arrive monthly, obscuring high-frequency load surges and unoccupied waste windows.</li>
+                        <li><strong>Lack of Closed-Loop Control:</strong> Existing commercial monitoring systems only display passive dashboards—none automatically trip circuit breakers.</li>
+                        <li><strong>The CM-EOS Innovation:</strong> Combines real-time IoT sensing, predictive ML, and autonomous MQTT-driven relay actuation to close the loop.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 3: Solution Explanation -->
+        <div class="slide-frame" data-notes="Walk through our solution. We don't just show graphs on a dashboard; our system actively trips the physical relay when idle waste is detected, and restores it when the next class timetable slot starts or on manual override.">
+            <div class="category-tag">Solution Explanation</div>
+            <h2 class="slide-header-title">Autonomous Demand-Side Optimization Platform</h2>
+            <div class="grid-3">
+                <div class="glass-card">
+                    <div class="card-heading">1. Real-Time Sensing & Send</div>
+                    <ul class="card-list">
+                        <li><strong>Hybrid Edge Nodes:</strong> Genuine ESP32 microcontrollers (Wokwi) alongside virtual Python daemons.</li>
+                        <li><strong>Physical Electrical Consistency:</strong> RMS Grid Voltage ~230V, Current I = P / V, Active Power P = V &times; I.</li>
+                        <li><strong>Uniform MQTT Data Contract:</strong> Isolated public broker namespace with 5-second telemetry streaming.</li>
+                    </ul>
+                </div>
+                <div class="glass-card highlight">
+                    <div class="card-heading">2. Predict & Decide</div>
+                    <ul class="card-list">
+                        <li><strong>Machine Learning Forecasting:</strong> Gradient Boosting Regressor predicts demand 6 hours ahead with peak alerts.</li>
+                        <li><strong>3-Factor Idle Rule Engine:</strong> Power &lt; 150W for &ge; 30s during scheduled timetable windows flags waste.</li>
+                        <li><strong>IPMVP Option C Accounting:</strong> Quantifies verified kWh energy conserved and avoided CO₂ emissions.</li>
+                    </ul>
+                </div>
+                <div class="glass-card">
+                    <div class="card-heading">3. Act & Show (Closed Loop)</div>
+                    <ul class="card-list">
+                        <li><strong>Remote Actuation:</strong> Automatically dispatches SHUTDOWN over MQTT to open the physical relay.</li>
+                        <li><strong>Verification Feedback:</strong> Confirms relay_state == OFF in subsequent telemetry packets.</li>
+                        <li><strong>Real-Time Dashboard:</strong> Streamlit UI with live Plotly traces and one-click manual restoration.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 4: Architecture Layers -->
+        <div class="slide-frame" data-notes="Detail the 6 architectural layers. Emphasize that only the physical sensor potentiometer is simulated; the firmware, MQTT routing, SQLite WAL storage, ML models, and actuation are 100% real.">
+            <div class="category-tag">System Architecture</div>
+            <h2 class="slide-header-title">Multi-Layer System Architecture</h2>
+            <div class="grid-2">
+                <div class="glass-card">
+                    <div class="card-heading">🏗️ Edge & Messaging Architecture</div>
+                    <ul class="card-list">
+                        <li><strong>Layer 1: Edge Computing Nodes</strong><br>
+                            &bull; <em>Wokwi ESP32 Nodes:</em> CC Lab & Carmel Lab running embedded C++.<br>
+                            &bull; <em>Python Virtual Daemons:</em> Assumption Lab & Chavara Lab.</li>
+                        <li><strong>Layer 2: Communication Broker (MQTT)</strong><br>
+                            &bull; Public HiveMQ Broker (<code>broker.hivemq.com:1883</code>).<br>
+                            &bull; Namespace: <code>campusmg_x7k2/&lt;lab_id&gt;/telemetry</code> and <code>/cmd</code>.</li>
+                        <li><strong>Layer 3: Telemetry Ingestion Service (subscriber.py)</strong><br>
+                            &bull; Schema validation, sanitization, and concurrent write queue.</li>
+                    </ul>
+                </div>
+                <div class="glass-card highlight">
+                    <div class="card-heading">🧠 Analytics, Decision & UI Layers</div>
+                    <ul class="card-list">
+                        <li><strong>Layer 4: High-Performance Persistence (SQLite WAL)</strong><br>
+                            &bull; Write-Ahead Logging (WAL) decouples writers from readers, preventing <code>database is locked</code> crashes.</li>
+                        <li><strong>Layer 5: Machine Learning Engine (forecast.py)</strong><br>
+                            &bull; Scikit-Learn GradientBoostingRegressor with lag and rolling features.</li>
+                        <li><strong>Layer 6: Optimization & Actuation (optimizer.py)</strong><br>
+                            &bull; Autonomous 3-factor idle detector and M&V energy calculation.</li>
+                        <li><strong>Layer 7: Central Dashboard (dashboard.py)</strong><br>
+                            &bull; Streamlit reactive application with 5-second live auto-refresh.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 5: The 7-Stage Flow -->
+        <div class="slide-frame" data-notes="Explain the pipeline flow. Walk across the 7 stages from physical ADC reading to MQTT transport, SQLite WAL persistence, ML feature vector inference, rule engine logic, relay tripping, and dashboard display.">
+            <div class="category-tag">Dataflow Pipeline</div>
+            <h2 class="slide-header-title">The 7-Stage Closed-Loop Dataflow</h2>
+            <div class="flow-container">
+                <div class="flow-step">
+                    <div class="flow-num">Stage 1</div>
+                    <div class="flow-title" style="color: var(--cyan-primary);">SENSE</div>
+                    <div class="flow-sub">ESP32 ADC / Virtual Load Generator</div>
+                </div>
+                <div class="flow-arrow">➔</div>
+                <div class="flow-step">
+                    <div class="flow-num">Stage 2</div>
+                    <div class="flow-title" style="color: var(--indigo-accent);">SEND</div>
+                    <div class="flow-sub">MQTT JSON Telemetry over HiveMQ</div>
+                </div>
+                <div class="flow-arrow">➔</div>
+                <div class="flow-step">
+                    <div class="flow-num">Stage 3</div>
+                    <div class="flow-title" style="color: var(--emerald-green);">STORE</div>
+                    <div class="flow-sub">SQLite Ingestion in WAL Mode</div>
+                </div>
+                <div class="flow-arrow">➔</div>
+                <div class="flow-step">
+                    <div class="flow-num">Stage 4</div>
+                    <div class="flow-title" style="color: var(--cyan-primary);">PREDICT</div>
+                    <div class="flow-sub">GBR 6h Recursive Demand Forecast</div>
+                </div>
+                <div class="flow-arrow">➔</div>
+                <div class="flow-step">
+                    <div class="flow-num">Stage 5</div>
+                    <div class="flow-title" style="color: var(--amber-warn);">DECIDE</div>
+                    <div class="flow-sub">3-Factor Idle Waste Rule Engine</div>
+                </div>
+                <div class="flow-arrow">➔</div>
+                <div class="flow-step">
+                    <div class="flow-num">Stage 6</div>
+                    <div class="flow-title" style="color: var(--rose-danger);">ACT</div>
+                    <div class="flow-sub">MQTT SHUTDOWN Command Trips Relay</div>
+                </div>
+                <div class="flow-arrow">➔</div>
+                <div class="flow-step">
+                    <div class="flow-num">Stage 7</div>
+                    <div class="flow-title" style="color: var(--emerald-green);">SHOW</div>
+                    <div class="flow-sub">Streamlit Real-Time Dashboard</div>
+                </div>
+            </div>
+            <div class="glass-card" style="margin-top: 14px; padding: 18px 24px;">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <div>
+                        <span class="strong-cyan">Verification Feedback Loop:</span> When Stage 6 executes, subsequent telemetry confirms <code>relay_state == "OFF"</code>. If unconfirmed, the optimizer retries.
+                    </div>
+                    <span style="background: rgba(16, 185, 129, 0.15); color: var(--emerald-green); font-size: 0.8rem; font-weight: 700; padding: 4px 10px; border-radius: 6px;">CLOSED-LOOP VERIFIED</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 6: Monitored RCSS Facilities -->
+        <div class="slide-frame" data-notes="Present the 4 labs at RCSS Kalamassery. CC Lab has 35 PCs with core coding sessions. Carmel Lab has 25 PCs. Assumption Lab has 20 PCs for research. Chavara Lab has 30 PCs for AI/ML practicals.">
+            <div class="category-tag">Campus Facilities</div>
+            <h2 class="slide-header-title">Monitored Facilities at RCSS Kalamassery</h2>
+            <div class="glass-card" style="padding: 10px;">
+                <table class="custom-table">
+                    <thead>
+                        <tr>
+                            <th>Laboratory Facility</th>
+                            <th>Edge Implementation</th>
+                            <th>Capacity</th>
+                            <th>Base Load</th>
+                            <th>Standby</th>
+                            <th>Active Hours & Operational Profile</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong class="strong-cyan">CC Lab (Central Computing)</strong></td>
+                            <td>Wokwi ESP32 Node #1</td>
+                            <td>35 PCs</td>
+                            <td>3,500 W</td>
+                            <td>200 W</td>
+                            <td>Core curriculum practicals (09:00–17:00), lunch dip at 13:00</td>
+                        </tr>
+                        <tr>
+                            <td><strong class="strong-cyan">Carmel Lab</strong></td>
+                            <td>Wokwi ESP32 Node #2</td>
+                            <td>25 PCs</td>
+                            <td>2,800 W</td>
+                            <td>150 W</td>
+                            <td>Project development & multimedia bench testing (09:00–16:00)</td>
+                        </tr>
+                        <tr>
+                            <td><strong class="strong-cyan">Assumption Lab</strong></td>
+                            <td>Python Virtual Daemon</td>
+                            <td>20 PCs</td>
+                            <td>2,400 W</td>
+                            <td>140 W</td>
+                            <td>Data analytics & statistical research computing (08:00–16:00)</td>
+                        </tr>
+                        <tr>
+                            <td><strong class="strong-cyan">Chavara Lab</strong></td>
+                            <td>Python Virtual Daemon</td>
+                            <td>30 PCs</td>
+                            <td>3,000 W</td>
+                            <td>180 W</td>
+                            <td>AI/ML laboratory practicals & institutional seminar computing (09:00–17:00)</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="grid-2" style="margin-top: 18px;">
+                <div class="glass-card" style="padding: 16px 20px;">
+                    <div style="font-size: 0.82rem; color: var(--text-muted); text-transform: uppercase;">Peak Monitored Capacity</div>
+                    <div style="font-size: 1.5rem; font-weight: 800; color: var(--text-main); font-family: 'Outfit';">110 Workstations &bull; 11.7 kW Peak</div>
+                </div>
+                <div class="glass-card" style="padding: 16px 20px;">
+                    <div style="font-size: 0.82rem; color: var(--text-muted); text-transform: uppercase;">Standby Baseline Leakage</div>
+                    <div style="font-size: 1.5rem; font-weight: 800; color: var(--amber-warn); font-family: 'Outfit';">670 W Continuous Idle Draw</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 7: Hardware & Firmware -->
+        <div class="slide-frame" data-notes="Discuss the embedded C++ firmware in Wokwi. Potentiometer on GPIO34 simulates dynamic load. Relay on GPIO26 is the main contactor. Explain that replacing the potentiometer with an INA219 or CT clamp makes it a physical deployable device.">
+            <div class="category-tag">Hardware-in-the-Loop</div>
+            <h2 class="slide-header-title">ESP32 Firmware & Embedded Pin Mapping</h2>
+            <div class="grid-2">
+                <div class="glass-card highlight">
+                    <div class="card-heading">🔌 Physical Hardware Connections</div>
+                    <ul class="card-list">
+                        <li><strong>ESP32 DevKit V1:</strong> Dual-core 240MHz SoC with integrated 802.11 b/g/n Wi-Fi.</li>
+                        <li><strong>Potentiometer (GPIO 34 / ADC1_CH6):</strong> Analog wiper (0–4095) linearly mapped to workstation current (0.2 A to 15.0 A).</li>
+                        <li><strong>Relay Module (GPIO 26):</strong> Digital contactor control. HIGH = Energized; LOW = Open circuit.</li>
+                        <li><strong>Status LED (GPIO 2):</strong> Visual feedback of energized circuit breaker.</li>
+                        <li><strong>Real Sensor Path:</strong> In a live deployment, the potentiometer maps directly to an INA219 I2C sensor or SCT-013 CT clamp with zero firmware modifications.</li>
+                        <li style="margin-top: 14px; background: rgba(0, 212, 255, 0.08); padding: 8px 12px; border-radius: 8px; border: 1px solid rgba(0, 212, 255, 0.25);">
+                            <strong>Live Simulation Links:</strong><br>
+                            &bull; <a href="https://wokwi.com/projects/477333584803799041" target="_blank" style="color: var(--cyan-primary); font-weight: 700; text-decoration: none;">CC Lab Simulation ↗</a><br>
+                            &bull; <a href="https://wokwi.com/projects/477335176879141889" target="_blank" style="color: var(--cyan-primary); font-weight: 700; text-decoration: none;">Carmel Lab Simulation ↗</a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="glass-card">
+                    <div class="card-heading">💻 Firmware Execution Logic (sketch.ino)</div>
+                    <ul class="card-list">
+                        <li><strong>Non-Blocking Timing:</strong> Uses <code>millis()</code> (5000 ms cadence) preventing MQTT thread starvation.</li>
+                        <li><strong>ArduinoJson Serialization:</strong> Packages active power, voltage, current, and relay state into a compact JSON payload.</li>
+                        <li><strong>PubSubClient Callback:</strong> Subscribes to <code>campusmg_x7k2/cc_lab/cmd</code> for remote control.</li>
+                        <li><strong>Instant Standby Clamping:</strong> On receiving <code>"SHUTDOWN"</code>, immediately de-energizes GPIO 26 and GPIO 2, clamping active power to ~200W.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 8: IoT Data Contract -->
+        <div class="slide-frame" data-notes="Show the data contract. Emphasize that all nodes (hardware ESP32 and virtual Python) adhere to the exact same contract, so the backend treats them identically.">
+            <div class="category-tag">IoT Communication</div>
+            <h2 class="slide-header-title">MQTT Data Contract & Topic Architecture</h2>
+            <div class="grid-2">
+                <div class="glass-card">
+                    <div class="card-heading">📡 Topic Namespace Architecture</div>
+                    <ul class="card-list">
+                        <li><strong>Isolated Public Prefix:</strong> <code>campusmg_x7k2</code> isolates RCSS messages on the public HiveMQ broker.</li>
+                        <li><strong>Telemetry Topic (Edge ➔ Backend):</strong><br>
+                            <code>campusmg_x7k2/&lt;lab_id&gt;/telemetry</code></li>
+                        <li><strong>Command Topic (Optimizer ➔ Edge):</strong><br>
+                            <code>campusmg_x7k2/&lt;lab_id&gt;/cmd</code> (Payload: <code>SHUTDOWN</code> or <code>RESTORE</code>)</li>
+                        <li><strong>Ingestion Wildcard:</strong><br>
+                            <code>campusmg_x7k2/+/telemetry</code> captures all 4 labs simultaneously.</li>
+                    </ul>
+                </div>
+                <div class="glass-card highlight">
+                    <div class="card-heading">📦 Validated Telemetry JSON Schema</div>
+                    <pre style="background: rgba(10, 15, 29, 0.9); border: 1px solid var(--border-card); border-radius: 10px; padding: 14px; font-family: 'Fira Code', monospace; font-size: 0.85rem; color: #a5f3fc; line-height: 1.45;">
+{
+  "lab_id": "cc_lab",
+  "voltage": 230.15,
+  "current": 8.41,
+  "power_w": 1935.56,
+  "relay_state": "ON",
+  "timestamp": "2026-10-08T11:42:05"
+}
+                    </pre>
+                    <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 8px;">
+                        Electrical consistency enforced: $V \approx 230\text{V} \pm 1.5\text{V}$, $I = P/V$, $P = V \times I$.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 9: Machine Learning Pipeline -->
+        <div class="slide-frame" data-notes="Explain the ML pipeline. We resample 5-minute data to hourly means. We extract lag features (1h, 2h, 24h) and rolling averages. We split strictly chronologically (80/20) without shuffling to avoid data leakage.">
+            <div class="category-tag">Predictive Analytics</div>
+            <h2 class="slide-header-title">Machine Learning Load Forecasting Pipeline</h2>
+            <div class="grid-2">
+                <div class="glass-card">
+                    <div class="card-heading">⚙️ Feature Engineering & Training</div>
+                    <ul class="card-list">
+                        <li><strong>Historical Seed:</strong> 30 days of 5-minute readings per lab (34,564 rows in SQLite WAL).</li>
+                        <li><strong>Hourly Resampling:</strong> Aggregated to hourly mean power to capture macro demand trends.</li>
+                        <li><strong>Calendar Features:</strong> <code>hour</code> (0–23), <code>dayofweek</code> (0–6), <code>is_weekend</code> (0 or 1).</li>
+                        <li><strong>Autoregressive Lags:</strong> <code>lag_1h</code> (momentum), <code>lag_2h</code>, and <code>lag_24h</code> (daily diurnal seasonality).</li>
+                        <li><strong>Rolling Window Statistics:</strong> <code>rolling_mean_3h</code> and <code>rolling_mean_24h</code> moving trend filters.</li>
+                        <li><strong>Strict Temporal Split:</strong> Chronological 80/20 split. Strictly no shuffling to prevent lookahead leakage.</li>
+                    </ul>
+                </div>
+                <div class="glass-card highlight">
+                    <div class="card-heading">📊 Experimental Model Evaluation</div>
+                    <table class="custom-table" style="margin-top: 4px;">
+                        <thead>
+                            <tr>
+                                <th>Facility Model</th>
+                                <th>GBR MAE</th>
+                                <th>R² Score</th>
+                                <th>Baseline MAE</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>CC Lab</td>
+                                <td>121.4 W</td>
+                                <td class="strong-green">0.936</td>
+                                <td>509.2 W</td>
+                            </tr>
+                            <tr>
+                                <td>Carmel Lab</td>
+                                <td>83.7 W</td>
+                                <td class="strong-green">0.921</td>
+                                <td>373.9 W</td>
+                            </tr>
+                            <tr>
+                                <td>Assumption Lab</td>
+                                <td>75.0 W</td>
+                                <td class="strong-green">0.936</td>
+                                <td>350.3 W</td>
+                            </tr>
+                            <tr>
+                                <td>Chavara Lab</td>
+                                <td>89.4 W</td>
+                                <td class="strong-green">0.899</td>
+                                <td>428.2 W</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div style="font-size: 0.8rem; color: var(--emerald-green); font-weight: 600; margin-top: 10px;">
+                        ✔ GBR reduces prediction error by over 75% compared to naive persistence baseline.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 10: 6-Hour Horizon & Peak Detection -->
+        <div class="slide-frame" data-notes="Explain the multi-step recursive forecasting and peak demand detection. By recursively feeding t+1 prediction into lag_1h, we predict up to 6 hours into the future, identifying projected peak campus kilowatt demand.">
+            <div class="category-tag">Predictive Analytics</div>
+            <h2 class="slide-header-title">Recursive 6-Hour Forecasting & Peak Alerts</h2>
+            <div class="grid-2">
+                <div class="glass-card">
+                    <div class="card-heading">🔄 Multi-Step Recursive Horizon Algorithm</div>
+                    <ul class="card-list">
+                        <li><strong>Step t+1:</strong> Predict $\hat{y}_{t+1}$ using current lag and rolling features.</li>
+                        <li><strong>Recursive Feedback:</strong> Append $\hat{y}_{t+1}$ to feature vector: <code>lag_1h = </code> $\hat{y}_{t+1}$, <code>lag_2h = </code> $y_t$.</li>
+                        <li><strong>Rolling Buffer Update:</strong> Append $\hat{y}_{t+1}$ to rolling 3-hour and 24-hour moving averages.</li>
+                        <li><strong>Horizon Steps t+2 to t+6:</strong> Iterate forward to construct full 6-hour forward demand curve.</li>
+                        <li><strong>Campus Aggregation:</strong> Sum individual facility models to forecast total campus microgrid load.</li>
+                    </ul>
+                </div>
+                <div class="glass-card highlight">
+                    <div class="card-heading">⚡ Automated Peak Demand Warning</div>
+                    <ul class="card-list">
+                        <li><strong>Early Warning System:</strong> Identifies max projected power: $\max_{h \in [1..6]} \hat{P}_{\text{campus}}(t+h)$.</li>
+                        <li><strong>Grid Dispatch Alert:</strong> Flags the specific peak hour (e.g., 14:00 at ~10.4 kW) to notify campus electrical engineers in advance.</li>
+                        <li><strong>Avoid Peak Tariffs:</strong> Enables pre-emptive demand shifting before penalty tariff bands trigger.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 11: Optimization Engine & Rules -->
+        <div class="slide-frame" data-notes="Walk through the 3-factor idle rule. All three conditions must hold: power below 150W, lasting at least 30 seconds (or 15 mins in production), during active class hours. Then show the IPMVP Option C savings calculation.">
+            <div class="category-tag">Decision Engine</div>
+            <h2 class="slide-header-title">Autonomous 3-Factor Idle Detection & Actuation</h2>
+            <div class="grid-2">
+                <div class="glass-card highlight">
+                    <div class="card-heading">⚙️ The 3-Factor Idle Rule Engine</div>
+                    <ul class="card-list">
+                        <li><strong>Condition 1 (Power Deficit):</strong> Measured active power $P < 150.0\text{ W}$ (<code>IDLE_POWER_W</code>).</li>
+                        <li><strong>Condition 2 (Persistence Duration):</strong> Deficit lasts continuously for $\ge 30\text{ s}$ (Demo mode) or $\ge 900\text{ s}$ (Production).</li>
+                        <li><strong>Condition 3 (Timetable Window):</strong> Timestamp falls inside scheduled active class hours (prevents false alerts at midnight).</li>
+                        <li><strong>Automated Action:</strong> Publishes <code>"SHUTDOWN"</code> payload to <code>campusmg_x7k2/&lt;lab&gt;/cmd</code>.</li>
+                    </ul>
+                </div>
+                <div class="glass-card">
+                    <div class="card-heading">📐 IPMVP Option C Verified Savings Formula</div>
+                    <div style="background: rgba(10, 15, 29, 0.9); border: 1px solid var(--border-card); border-radius: 10px; padding: 14px; font-family: 'Fira Code', monospace; font-size: 0.9rem; color: #a5f3fc; margin-bottom: 12px;">
+                        kWh Saved = [ (P_expected(h) - P_standby) &times; (&Delta;t / 3600) ] / 1000
+                    </div>
+                    <ul class="card-list">
+                        <li><strong>Expected Baseline Load:</strong> Dynamically queried from historical average power for that specific lab and hour.</li>
+                        <li><strong>Elapsed Duration:</strong> $\Delta t = t_{\text{restored}} - t_{\text{flagged}}$ measured in seconds.</li>
+                        <li><strong>Carbon Accounting:</strong> Avoided emissions calculated at standard grid intensity factor: $0.82\text{ kg CO}_2/\text{kWh}$.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 12: Interactive Simulator Widget -->
+        <div class="slide-frame" data-notes="Faculty loves this slide! Use the slider right here to simulate turning the potentiometer dial in Wokwi. Drag the slider to 80W, watch the status flip to IDLE WARNING, and see the relay click OFF automatically!">
+            <div class="category-tag">Interactive Demonstration</div>
+            <h2 class="slide-header-title">Live Closed-Loop Simulation Testbench</h2>
+            <div class="glass-card">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                    <div>
+                        <div class="card-heading" style="margin-bottom: 2px;">🎛️ Interactive Potentiometer Load Simulator (CC Lab)</div>
+                        <div style="font-size: 0.85rem; color: var(--text-muted);">Drag the slider below to simulate rotating the physical Wokwi potentiometer in real time:</div>
+                    </div>
+                    <button class="btn-action" onclick="resetSim()" style="background: rgba(255,255,255,0.08);">Reset Dial</button>
+                </div>
+
+                <div class="simulator-box">
+                    <div class="sim-slider-row">
+                        <span style="font-size: 0.85rem; color: var(--rose-danger); font-weight: 700;">Idle (< 150W)</span>
+                        <input type="range" min="40" max="3500" value="2100" class="sim-slider" id="simSlider" oninput="updateSim(this.value)">
+                        <span style="font-size: 0.85rem; color: var(--emerald-green); font-weight: 700;">Full Load (3.5 kW)</span>
+                    </div>
+
+                    <div class="sim-status-row">
+                        <div class="sim-badge">
+                            <div class="sim-badge-label">Active Power</div>
+                            <div class="sim-badge-value" id="simPower" style="color: var(--cyan-primary);">2,100 W</div>
+                        </div>
+                        <div class="sim-badge">
+                            <div class="sim-badge-label">Measured Current</div>
+                            <div class="sim-badge-value" id="simCurrent" style="color: #fff;">9.13 A</div>
+                        </div>
+                        <div class="sim-badge">
+                            <div class="sim-badge-label">Circuit Contactor</div>
+                            <div class="sim-badge-value" id="simRelay" style="color: var(--emerald-green);">CLOSED (ON)</div>
+                        </div>
+                        <div class="sim-badge">
+                            <div class="sim-badge-label">Optimization State</div>
+                            <div class="sim-badge-value" id="simState" style="color: var(--emerald-green);">NORMAL ACTIVE</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="margin-top: 14px; font-size: 0.88rem; color: var(--text-sub); display: flex; align-items: center; gap: 8px;">
+                    <span id="simLog" style="font-family: 'Fira Code', monospace; color: var(--cyan-primary);">
+                        [STATUS] Workstations active. Power draw inside normal curriculum operational bounds.
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 13: Central Dashboard Overview -->
+        <div class="slide-frame" data-notes="Highlight our modern real-time dashboard. Walk through the dual-interface architecture: our primary high-performance Flask application on port 5000 with sub-second countdown tickers and Chart.js telemetry, alongside our parallel Streamlit analytical view on port 8501.">
+            <div class="category-tag">User Interface</div>
+            <h2 class="slide-header-title">Dual-Engine Real-Time Central Dashboard (Flask & Streamlit)</h2>
+            <div class="grid-2">
+                <div class="glass-card">
+                    <div class="card-heading">📊 Observability & Metrics Modules</div>
+                    <ul class="card-list">
+                        <li><strong>Top KPI Tiles:</strong> Campus Power Now (W & kW), Active vs Standby Labs, Verified Energy Saved (kWh), and Avoided CO₂ (kg).</li>
+                        <li><strong>Live Telemetry Stream:</strong> High-speed Chart.js multi-line canvas with 1-second reactive status polling and zero lockups.</li>
+                        <li><strong>Smooth Countdown Tickers:</strong> Client-side 1-second countdown tickers (30s ➔ 0s) with animated progress bars during idle detection.</li>
+                        <li><strong>ML Predictive Panel:</strong> 6-hour forward demand forecast bar chart highlighting the projected peak load hour callout.</li>
+                        <li><strong>Model Performance Table:</strong> Live MAE, R², and baseline comparison metrics for each facility model.</li>
+                    </ul>
+                </div>
+                <div class="glass-card highlight">
+                    <div class="card-heading">🎛️ Manual Override & Audit Controls</div>
+                    <ul class="card-list">
+                        <li><strong>Facility Control Grid:</strong> Dedicated status cards for CC Lab, Carmel Lab, Assumption Lab, and Chavara Lab.</li>
+                        <li><strong>Live Status Badges:</strong> Green (ACTIVE ON), Yellow (IDLE COUNTDOWN 30s ➔ 0s), Red (STANDBY TRIPPED).</li>
+                        <li><strong>One-Click Instant Restore:</strong> Dispatches retained <code>RESTORE</code> over MQTT (QoS 1) to immediately re-energize circuits.</li>
+                        <li><strong>Manual Trip Cutoff:</strong> Allows evaluators to test immediate contactor de-energization directly from the UI.</li>
+                        <li><strong>Verified M&V Audit Trail:</strong> Complete historical table of flagged events, timestamps, duration, and verified kWh conserved.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 14: 5-Minute Live Demo Flow -->
+        <div class="slide-frame" data-notes="Walk through our live demonstration flow for the faculty presentation. Minute 1: start system with run_all.py. Minute 2: turn Wokwi dial down. Minute 3: watch relay trip. Minute 4: restore via dashboard or by turning meter high.">
+            <div class="category-tag">Evaluation Script</div>
+            <h2 class="slide-header-title">5-Minute Faculty Evaluation Demo Flow</h2>
+            <div class="grid-3">
+                <div class="glass-card">
+                    <div class="card-heading">Minute 1: Normal State</div>
+                    <ul class="card-list">
+                        <li>Run <code>python run_all.py</code> in terminal.</li>
+                        <li>Primary Modern Dashboard opens at <code>http://localhost:5000</code> (Streamlit at <code>:8501</code>).</li>
+                        <li>Open & Play Wokwi ESP32 simulations:<br>
+                            &bull; <a href="https://wokwi.com/projects/477333584803799041" target="_blank" style="color:var(--cyan-primary); font-weight:700;">CC Lab Simulation ↗</a><br>
+                            &bull; <a href="https://wokwi.com/projects/477335176879141889" target="_blank" style="color:var(--cyan-primary); font-weight:700;">Carmel Lab Simulation ↗</a>
+                        </li>
+                        <li>All 4 labs stream active telemetry (~7–10 kW).</li>
+                        <li>Wokwi Relays and Green Status LEDs are ON.</li>
+                    </ul>
+                </div>
+                <div class="glass-card highlight">
+                    <div class="card-heading">Minute 2-3: Trigger Idle</div>
+                    <ul class="card-list">
+                        <li>Turn Wokwi potentiometer counter-clockwise to 0%.</li>
+                        <li>Simulates students departing coding practical early.</li>
+                        <li>Power drops to ~46 W (&lt; 150 W threshold).</li>
+                        <li>Dashboard immediately begins 30-second countdown ticker (30s ➔ 0s) with live progress bar.</li>
+                        <li>At 0s, autonomous optimizer triggers <code>SHUTDOWN</code>.</li>
+                    </ul>
+                </div>
+                <div class="glass-card">
+                    <div class="card-heading">Minute 4-5: Closed Loop</div>
+                    <ul class="card-list">
+                        <li>Optimizer sends retained <code>SHUTDOWN</code> over MQTT.</li>
+                        <li>Wokwi Relay clicks OPEN; Green Status LED turns OFF!</li>
+                        <li>Dashboard badge flips to red <code>STANDBY (TRIPPED)</code>.</li>
+                        <li>Verified kWh Saved counter increments in real-time.</li>
+                        <li><strong>Two-Way Restore:</strong> Either turn meter back to High in Wokwi OR click <strong>"Restore Circuit"</strong> on dashboard to turn light back ON!</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 15: Viva Defense Q&A -->
+        <div class="slide-frame" data-notes="Address common faculty questions preemptively. Why GBR over LSTM? Tabular tree models outperform RNNs on lag features without vanishing gradients. Why SQLite WAL? Prevents database lock errors during concurrent telemetry writes and dashboard reads.">
+            <div class="category-tag">Technical Defense</div>
+            <h2 class="slide-header-title">Faculty Viva Voce Defense & Technical Q&A</h2>
+            <div class="grid-2">
+                <div class="glass-card">
+                    <div class="card-heading">Q1: Why GBR over LSTM / Deep Learning?</div>
+                    <p style="font-size: 0.9rem; line-height: 1.55; color: #cbd5e1;">
+                        <strong>Answer:</strong> On tabular time-series with engineered autoregressive lag features, gradient-boosted decision trees consistently outperform recurrent neural networks. GBR handles non-linear step drops (e.g. 13:00 lunch dip) with zero lag, avoids vanishing gradients, requires sub-millisecond CPU inference, and trains in seconds without GPU hardware.
+                    </p>
+                    <div class="card-heading" style="margin-top: 14px;">Q2: Why is SQLite WAL Mode Essential?</div>
+                    <p style="font-size: 0.9rem; line-height: 1.55; color: #cbd5e1;">
+                        <strong>Answer:</strong> In standard rollback journal mode, writing locks the entire SQLite database file. Since <code>subscriber.py</code> writes telemetry every 5 seconds, concurrent analytical reads from Streamlit would trigger <code>database is locked</code> crashes. WAL mode decouples readers from writers.
+                    </p>
+                </div>
+                <div class="glass-card highlight">
+                    <div class="card-heading">Q3: How is Energy Saved Accurately Calculated?</div>
+                    <p style="font-size: 0.9rem; line-height: 1.55; color: #cbd5e1;">
+                        <strong>Answer:</strong> We follow International Performance Measurement and Verification Protocol (IPMVP) Option C: Expected energy is estimated using historical hourly averages for that specific lab and hour, minus measured standby power during the shutdown window:
+                        $$\text{Savings} = (P_{\text{historical\_avg}} - P_{\text{standby}}) \times \Delta t_{\text{shutdown}}$$
+                    </p>
+                    <div class="card-heading" style="margin-top: 14px;">Q4: Safety Interlocks for Critical Infrastructure?</div>
+                    <p style="font-size: 0.9rem; line-height: 1.55; color: #cbd5e1;">
+                        <strong>Answer:</strong> Critical institutional loads (campus servers, Wi-Fi access points, emergency lighting) are physically isolated on non-switchable circuit breakers; only general student workstations are connected to the contactor.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 17: Conclusion & Thank You -->
+        <div class="slide-frame" data-notes="Conclude the presentation on behalf of Team PIXEL. Summarize that CM-EOS is a complete, working closed-loop platform ready for live demonstration. Invite faculty panel for questions.">
+            <div style="max-width: 960px; margin: auto; text-align: center;">
+                <div class="category-tag" style="justify-content: center;">Conclusion &bull; Capstone Defense</div>
+                <h1 style="font-family: 'Outfit', sans-serif; font-size: 3.5rem; font-weight: 900; color: var(--cyan-primary); margin-bottom: 10px;">
+                    Thank You!
+                </h1>
+                <p style="font-size: 1.25rem; color: var(--text-main); margin-bottom: 18px; font-weight: 500;">
+                    Campus Micro-Grid & Energy Optimization System (CM-EOS)
+                </p>
+
+                <!-- Team PIXEL Member Grid Box -->
+                <div style="background: rgba(18, 26, 47, 0.85); border: 1px solid var(--border-card); border-radius: 14px; padding: 18px 24px; margin-bottom: 20px; text-align: left;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 8px;">
+                        <span style="font-family: 'Outfit', sans-serif; font-weight: 800; font-size: 1.1rem; color: #fff; letter-spacing: 0.5px;">
+                            🚀 Project Developed by <span style="color: var(--cyan-primary);">Team PIXEL</span>
+                        </span>
+                        <span style="font-size: 0.82rem; color: var(--text-sub);">Rajagiri College of Social Sciences (RCSS), Kalamassery</span>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; font-size: 0.82rem;">
+                        <div style="background: rgba(0, 212, 255, 0.08); border: 1px solid rgba(0, 212, 255, 0.25); border-radius: 8px; padding: 8px 10px;">
+                            <strong style="color: #fff; display: block;">Devna J</strong>
+                            <span style="font-size: 0.72rem; color: var(--cyan-primary); font-weight: 600;">Team Lead</span>
+                        </div>
+                        <div style="background: rgba(99, 102, 241, 0.08); border: 1px solid rgba(99, 102, 241, 0.25); border-radius: 8px; padding: 8px 10px;">
+                            <strong style="color: #fff; display: block;">Diya Mary George</strong>
+                            <span style="font-size: 0.72rem; color: #818cf8; font-weight: 600;">Doc Coordinator</span>
+                        </div>
+                        <div style="background: rgba(16, 185, 129, 0.08); border: 1px solid rgba(16, 185, 129, 0.25); border-radius: 8px; padding: 8px 10px;">
+                            <strong style="color: #fff; display: block;">Jees Thomas Cleetus</strong>
+                            <span style="font-size: 0.72rem; color: #34d399; font-weight: 600;">Pres Coordinator</span>
+                        </div>
+                        <div style="background: rgba(255, 255, 255, 0.03); border: 1px solid var(--border-card); border-radius: 8px; padding: 8px 10px;">
+                            <strong style="color: #fff; display: block;">Ashbi Saju</strong>
+                            <span style="font-size: 0.72rem; color: var(--text-muted);">Core Member</span>
+                        </div>
+                        <div style="background: rgba(255, 255, 255, 0.03); border: 1px solid var(--border-card); border-radius: 8px; padding: 8px 10px;">
+                            <strong style="color: #fff; display: block;">Rena Elza Viju</strong>
+                            <span style="font-size: 0.72rem; color: var(--text-muted);">Core Member</span>
+                        </div>
+                        <div style="background: rgba(255, 255, 255, 0.03); border: 1px solid var(--border-card); border-radius: 8px; padding: 8px 10px;">
+                            <strong style="color: #fff; display: block;">Kishore M</strong>
+                            <span style="font-size: 0.72rem; color: var(--text-muted);">Core Member</span>
+                        </div>
+                        <div style="background: rgba(255, 255, 255, 0.03); border: 1px solid var(--border-card); border-radius: 8px; padding: 8px 10px;">
+                            <strong style="color: #fff; display: block;">Merlin Xavier</strong>
+                            <span style="font-size: 0.72rem; color: var(--text-muted);">Core Member</span>
+                        </div>
+                        <div style="background: rgba(255, 255, 255, 0.03); border: 1px solid var(--border-card); border-radius: 8px; padding: 8px 10px;">
+                            <strong style="color: #fff; display: block;">Jasin Joji</strong>
+                            <span style="font-size: 0.72rem; color: var(--text-muted);">Core Member</span>
+                        </div>
+                        <div style="background: rgba(255, 255, 255, 0.03); border: 1px solid var(--border-card); border-radius: 8px; padding: 8px 10px;">
+                            <strong style="color: #fff; display: block;">Daya Mathew</strong>
+                            <span style="font-size: 0.72rem; color: var(--text-muted);">Core Member</span>
+                        </div>
+                        <div style="background: rgba(255, 255, 255, 0.03); border: 1px solid var(--border-card); border-radius: 8px; padding: 8px 10px;">
+                            <strong style="color: #fff; display: block;">Mahadevan Nair MP</strong>
+                            <span style="font-size: 0.72rem; color: var(--text-muted);">Core Member</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- SPEAKER NOTES DRAWER -->
+    <div class="speaker-notes-panel" id="notesPanel">
+        <div class="notes-header">
+            <span class="notes-title">🎙️ Faculty Talking Points</span>
+            <button onclick="toggleNotes()" style="background:none; border:none; color:var(--text-muted); cursor:pointer; font-size:1rem;">✕</button>
+        </div>
+        <div class="notes-body" id="notesContent">
+            Welcome the faculty panel. Introduce Team PIXEL from Rajagiri College of Social Sciences (RCSS) Kalamassery, and outline that this project addresses genuine electrical inefficiencies in computer laboratories.
+        </div>
+    </div>
+
+    <!-- SLIDE OVERVIEW DRAWER -->
+    <div class="drawer-overlay" id="drawerOverlay">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <h2 style="font-family: 'Outfit'; font-size: 1.8rem; color: #fff;">📑 Slide Navigation Matrix</h2>
+            <button class="btn-action" onclick="toggleDrawer()">Close (Esc)</button>
+        </div>
+        <div class="drawer-grid" id="drawerGrid"></div>
+    </div>
+
+    <!-- BOTTOM CONTROL BAR -->
+    <div class="bottom-bar">
+        <button class="btn-nav-arrow" onclick="prevSlide()">
+            ◀ Previous
+        </button>
+        <div style="display: flex; align-items: center;">
+            <span class="slide-counter-badge" id="slideNum">Slide 01 / 17</span>
+            <div class="progress-track">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+        </div>
+        <button class="btn-nav-arrow" onclick="nextSlide()">
+            Next ▶
+        </button>
+    </div>
+
+    <script>
+        let currentIdx = 0;
+        const slides = document.querySelectorAll('.slide-frame');
+        const total = slides.length;
+        const slideNumEl = document.getElementById('slideNum');
+        const progressFillEl = document.getElementById('progressFill');
+        const notesContentEl = document.getElementById('notesContent');
+        const notesPanelEl = document.getElementById('notesPanel');
+        const notesBtnEl = document.getElementById('notesBtn');
+        const drawerOverlayEl = document.getElementById('drawerOverlay');
+        const drawerGridEl = document.getElementById('drawerGrid');
+
+        // Build Drawer Items
+        slides.forEach((s, idx) => {
+            const h = s.querySelector('.slide-header-title') || s.querySelector('h1') || { innerText: `Slide ${idx+1}` };
+            const card = document.createElement('div');
+            card.className = 'drawer-card';
+            card.innerHTML = `
+                <div class="drawer-card-num">SLIDE ${String(idx+1).padStart(2, '0')}</div>
+                <div class="drawer-card-title">${h.innerText}</div>
+            `;
+            card.onclick = () => {
+                goToSlide(idx);
+                toggleDrawer();
+            };
+            drawerGridEl.appendChild(card);
+        });
+
+        function updateSlideView() {
+            slides.forEach((s, i) => {
+                s.classList.toggle('active', i === currentIdx);
+            });
+            slideNumEl.innerText = `Slide ${String(currentIdx + 1).padStart(2, '0')} / ${String(total).padStart(2, '0')}`;
+            progressFillEl.style.width = `${((currentIdx + 1) / total) * 100}%`;
+
+            // Update Speaker Notes
+            const notes = slides[currentIdx].getAttribute('data-notes') || 'No notes for this slide.';
+            notesContentEl.innerText = notes;
+        }
+
+        function nextSlide() {
+            if (currentIdx < total - 1) {
+                currentIdx++;
+                updateSlideView();
+            }
+        }
+
+        function prevSlide() {
+            if (currentIdx > 0) {
+                currentIdx--;
+                updateSlideView();
+            }
+        }
+
+        function goToSlide(idx) {
+            currentIdx = idx;
+            updateSlideView();
+        }
+
+        function toggleNotes() {
+            notesPanelEl.classList.toggle('open');
+            notesBtnEl.classList.toggle('active');
+        }
+
+        function toggleDrawer() {
+            drawerOverlayEl.classList.toggle('open');
+        }
+
+        function toggleFullscreen() {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen().catch(() => {});
+            } else {
+                document.exitFullscreen().catch(() => {});
+            }
+        }
+
+        // Keyboard Controls
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') {
+                nextSlide();
+            } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+                prevSlide();
+            } else if (e.key === 'f' || e.key === 'F') {
+                toggleFullscreen();
+            } else if (e.key === 'n' || e.key === 'N') {
+                toggleNotes();
+            } else if (e.key === 'o' || e.key === 'O' || e.key === 'Escape') {
+                toggleDrawer();
+            }
+        });
+
+        // Interactive Simulator Logic for Slide 12
+        let simTimer = null;
+        function updateSim(val) {
+            const p = parseFloat(val);
+            const v = 230.1;
+            const i = (p / v).toFixed(2);
+            document.getElementById('simPower').innerText = `${Math.round(p).toLocaleString()} W`;
+            document.getElementById('simCurrent').innerText = `${i} A`;
+
+            const relayEl = document.getElementById('simRelay');
+            const stateEl = document.getElementById('simState');
+            const logEl = document.getElementById('simLog');
+
+            if (p < 150) {
+                stateEl.innerText = 'IDLE DEFICIT (< 150W)';
+                stateEl.style.color = 'var(--amber-warn)';
+                logEl.innerText = '[RULE CHECK] Active power below 150W cutoff! Monitoring 30-second persistence window...';
+                logEl.style.color = 'var(--amber-warn)';
+
+                clearTimeout(simTimer);
+                simTimer = setTimeout(() => {
+                    relayEl.innerText = 'OPEN (TRIPPED)';
+                    relayEl.style.color = 'var(--rose-danger)';
+                    stateEl.innerText = 'AUTONOMOUS SHUTDOWN';
+                    stateEl.style.color = 'var(--rose-danger)';
+                    document.getElementById('simPower').innerText = '180 W (Standby)';
+                    document.getElementById('simCurrent').innerText = '0.78 A';
+                    logEl.innerText = '[ACTUATION EXECUTED] Relay opened! Hardware contator tripped via MQTT. Verified closed loop.';
+                    logEl.style.color = 'var(--rose-danger)';
+                }, 2000); // 2s simulated duration for quick demo
+            } else {
+                clearTimeout(simTimer);
+                relayEl.innerText = 'CLOSED (ON)';
+                relayEl.style.color = 'var(--emerald-green)';
+                stateEl.innerText = 'NORMAL ACTIVE';
+                stateEl.style.color = 'var(--emerald-green)';
+                logEl.innerText = '[STATUS] Workstations active. Power draw inside normal curriculum operational bounds.';
+                logEl.style.color = 'var(--cyan-primary)';
+            }
+        }
+
+        function resetSim() {
+            document.getElementById('simSlider').value = 2100;
+            updateSim(2100);
+        }
+
+        updateSlideView();
+    </script>
+</body>
+</html>
