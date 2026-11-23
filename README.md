@@ -1,22 +1,41 @@
 # RCSS Campus Micro-Grid & Energy Optimization System (CM-EOS)
 
-**Institution:** Rajagiri College of Social Sciences (RCSS), Kalamassery  
-**Engineering Team:** Team PIXEL  
-**Monitored Facilities:** CC Lab, Carmel Lab, Assumption Lab, Chavara Lab  
+![Python](https://img.shields.io/badge/Python-3.10%2B-3776AB?logo=python&logoColor=white)
+![ESP32](https://img.shields.io/badge/ESP32-Wokwi-E7352C?logo=espressif&logoColor=white)
+![MQTT](https://img.shields.io/badge/MQTT-HiveMQ-660066?logo=mqtt&logoColor=white)
+![scikit-learn](https://img.shields.io/badge/scikit--learn-Gradient%20Boosting-F7931E?logo=scikitlearn&logoColor=white)
+![Flask](https://img.shields.io/badge/Dashboard-Flask%20%2B%20Streamlit-000000?logo=flask&logoColor=white)
 
-### 👥 Team PIXEL &mdash; Engineering Roster
-- **Devna J** &mdash; *Team Lead & System Integration*
-- **Diya Mary George** &mdash; *Documentation Coordinator*
-- **Jees Thomas Cleetus** &mdash; *Presentation Coordinator*
-- **Ashbi Saju**
-- **Rena Elza Viju** 
-- **Daya Mathew**
-- **Mahadevan Nair MP**
-- **Kishore M**
-- **Merlin Xavier**
-- **Jasin Joji**
+An IoT energy-monitoring system for four computer labs at Rajagiri College (RCSS). ESP32 nodes stream voltage, current and power over **MQTT**; a Python core stores the telemetry in SQLite, **automatically trips a lab's relay after 30 s below 150 W** (idle), and uses per-lab **Gradient Boosting** models to forecast the next 6 hours of demand. Everything is shown on a live web dashboard where labs can also be switched remotely.
 
----
+<p align="center"><img src="docs/screenshots/dashboard.png" width="90%" alt="Live micro-grid dashboard" /></p>
+<p align="center"><img src="docs/screenshots/telemetry_and_forecast.png" width="90%" alt="Telemetry stream, demand forecast and audit trail" /></p>
+
+## Architecture
+
+```mermaid
+flowchart LR
+    subgraph Edge
+      A[ESP32 nodes<br/>Wokwi: CC Lab, Carmel Lab]
+      B[Python virtual nodes<br/>Assumption Lab, Chavara Lab]
+    end
+    A -- telemetry --> M((HiveMQ<br/>MQTT broker))
+    B -- telemetry --> M
+    M --> C[Ingest + idle optimizer<br/>app.py]
+    C --> D[(SQLite<br/>microgrid.db)]
+    D --> E[Gradient Boosting<br/>6-hour forecast]
+    C -- relay trip / restore --> M
+    M -- commands --> A
+    C --> F[Flask dashboard :5000]
+    D --> G[Streamlit dashboard :8501]
+```
+
+**Highlights**
+- Closed-loop control: idle detection → relay cut-off command → audit log entry → restore, all over MQTT.
+- One trained `GradientBoostingRegressor` per lab (`models/*.joblib`), retrainable with `forecast.py`.
+- `run_all.py` bootstraps everything: generates 30 days of history if the database is missing, trains the models, and starts both dashboards.
+
+**Team:** built by Team PIXEL (10 members); see the roster at the end.
 
 ## 🚀 Quick Start Guide (How to Run This Project)
 
@@ -130,3 +149,17 @@ To stop all services cleanly, press **`Ctrl + C`** in the terminal where `python
   python backfill.py
   python forecast.py
   ```
+
+---
+
+### 👥 Team PIXEL &mdash; Engineering Roster
+- **Devna J** &mdash; *Team Lead & System Integration*
+- **Diya Mary George** &mdash; *Documentation Coordinator*
+- **Jees Thomas Cleetus** &mdash; *Presentation Coordinator*
+- **Ashbi Saju**
+- **Rena Elza Viju** 
+- **Daya Mathew**
+- **Mahadevan Nair MP**
+- **Kishore M**
+- **Merlin Xavier**
+- **Jasin Joji**
